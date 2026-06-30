@@ -1,0 +1,4 @@
+resource_group_name      = "deploy-high-rg"
+vnet_name                = "deploy-high-vnet"
+vnet_resource_group_name = "deploy-high-rg"
+deploy_bastion           = true

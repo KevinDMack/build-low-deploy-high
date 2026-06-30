@@ -1,0 +1,22 @@
+{
+  "name": "build-low-deploy-high",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "HashiCorp.terraform",
+        "ms-azuretools.vscode-azurecli",
+        "ms-azuretools.vscode-bicep",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  }
+}

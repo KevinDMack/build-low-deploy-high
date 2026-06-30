@@ -1,0 +1,6 @@
+resource_group_name      = "build-low-rg"
+vnet_name                = "build-low-vnet"
+vnet_resource_group_name = "build-low-rg"
+image_id                 = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/build-low-image-rg/providers/Microsoft.Compute/images/build-low-deploy-high-dev-image"
+vm_admin_ssh_public_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCexample"
+deploy_bastion           = true

@@ -1,0 +1,6 @@
+build_resource_group_name          = "build-low-image-rg"
+managed_image_resource_group_name = "build-low-image-rg"
+managed_image_name                = "build-low-deploy-high-dev-image"
+location                          = "usgovarizona"
+vm_size                           = "Standard_D2s_v5"
+ssh_username                      = "azureuser"
