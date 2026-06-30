@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Low: init",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/init.sh low"
+    },
+    {
+      "label": "Low: validate",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/validate.sh low"
+    },
+    {
+      "label": "Low: deploy",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/deploy.sh low"
+    },
+    {
+      "label": "Low: destroy",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/destroy.sh low"
+    },
+    {
+      "label": "High: init",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/init.sh high"
+    },
+    {
+      "label": "High: validate",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/validate.sh high"
+    },
+    {
+      "label": "High: deploy",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/deploy.sh high"
+    },
+    {
+      "label": "High: destroy",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/destroy.sh high"
+    },
+    {
+      "label": "Create foundations",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/create-foundations.sh"
+    }
+  ]
+}
