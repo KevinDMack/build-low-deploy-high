@@ -4,11 +4,11 @@ This repository implements a build-low/deploy-high pattern for Azure Government 
 
 ## Folders
 
-- `/home/runner/work/build-low-deploy-high/build-low-deploy-high/dev-machine` contains the Packer template that builds the managed image used by the low environment virtual machines.
-- `/home/runner/work/build-low-deploy-high/build-low-deploy-high/low-environment` contains Terraform that targets an existing virtual network, deploys the managed-image virtual machines, and provisions private Azure OpenAI, Azure Container Registry, and Storage resources.
-- `/home/runner/work/build-low-deploy-high/build-low-deploy-high/high-environment` contains Terraform that targets an existing virtual network, deploys private Azure OpenAI, Azure Container Registry, and Storage resources, and attaches an outbound-deny NSG.
-- `/home/runner/work/build-low-deploy-high/build-low-deploy-high/scripts` contains Azure CLI and Terraform helper scripts.
-- `/home/runner/work/build-low-deploy-high/build-low-deploy-high/docs` contains solution documentation.
+- `dev-machine/` contains the Packer template that builds the managed image used by the low environment virtual machines.
+- `low-environment/` contains Terraform that targets an existing virtual network, deploys the managed-image virtual machines, and provisions private Azure OpenAI, Azure Container Registry, and Storage resources.
+- `high-environment/` contains Terraform that targets an existing virtual network, deploys private Azure OpenAI, Azure Container Registry, and Storage resources, and attaches an outbound-deny NSG.
+- `scripts/` contains Azure CLI and Terraform helper scripts.
+- `docs/` contains solution documentation.
 
 ## Low environment
 
