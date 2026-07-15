@@ -95,6 +95,21 @@ The repository includes pre-configured VS Code tasks (`.vscode/tasks.json`) that
 | **High: deploy** | `terraform apply` for the high environment |
 | **High: destroy** | `terraform destroy` for the high environment |
 
+## Infrastructure testing workflow
+
+GitHub Actions now runs `.github/workflows/infrastructure-tests.yml` whenever files in `low-environment/` or `high-environment/` change.
+
+- **Validation checks (always):** `terraform fmt -check`, `terraform init -backend=false`, and `terraform validate` for both environments.
+- **Drift checks (when configured):** `terraform plan -refresh-only -detailed-exitcode` for each environment.
+
+To enable drift checks in CI, configure the following repository secrets:
+
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+- `LOW_ENVIRONMENT_TFVARS` (contents for `low-environment/terraform.tfvars`)
+- `HIGH_ENVIRONMENT_TFVARS` (contents for `high-environment/terraform.tfvars`)
+
 ## Further reading
 
 - [Architecture overview](docs/architecture.md)

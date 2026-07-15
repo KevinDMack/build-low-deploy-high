@@ -1,0 +1,92 @@
+name: Infrastructure tests
+
+on:
+  pull_request:
+    paths:
+      - low-environment/**
+      - high-environment/**
+      - scripts/test-infra.sh
+      - .github/workflows/infrastructure-tests.yml
+  push:
+    paths:
+      - low-environment/**
+      - high-environment/**
+      - scripts/test-infra.sh
+      - .github/workflows/infrastructure-tests.yml
+
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [low, high]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Validate Terraform
+        run: /bin/bash ./scripts/test-infra.sh "${{ matrix.environment }}" validate
+
+  terraform-drift:
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    needs: terraform-validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        environment: [low, high]
+    steps:
+      - name: Checkout
+        if: >-
+          (matrix.environment == 'low' && secrets.LOW_ENVIRONMENT_TFVARS != '') ||
+          (matrix.environment == 'high' && secrets.HIGH_ENVIRONMENT_TFVARS != '')
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        if: >-
+          (matrix.environment == 'low' && secrets.LOW_ENVIRONMENT_TFVARS != '') ||
+          (matrix.environment == 'high' && secrets.HIGH_ENVIRONMENT_TFVARS != '')
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        if: >-
+          (matrix.environment == 'low' && secrets.LOW_ENVIRONMENT_TFVARS != '') ||
+          (matrix.environment == 'high' && secrets.HIGH_ENVIRONMENT_TFVARS != '')
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Write terraform.tfvars
+        if: >-
+          (matrix.environment == 'low' && secrets.LOW_ENVIRONMENT_TFVARS != '') ||
+          (matrix.environment == 'high' && secrets.HIGH_ENVIRONMENT_TFVARS != '')
+        shell: bash
+        env:
+          LOW_ENVIRONMENT_TFVARS: ${{ secrets.LOW_ENVIRONMENT_TFVARS }}
+          HIGH_ENVIRONMENT_TFVARS: ${{ secrets.HIGH_ENVIRONMENT_TFVARS }}
+        run: |
+          case "${{ matrix.environment }}" in
+            low) printf '%s\n' "${LOW_ENVIRONMENT_TFVARS}" > low-environment/terraform.tfvars ;;
+            high) printf '%s\n' "${HIGH_ENVIRONMENT_TFVARS}" > high-environment/terraform.tfvars ;;
+          esac
+
+      - name: Drift check
+        if: >-
+          (matrix.environment == 'low' && secrets.LOW_ENVIRONMENT_TFVARS != '') ||
+          (matrix.environment == 'high' && secrets.HIGH_ENVIRONMENT_TFVARS != '')
+        run: /bin/bash ./scripts/test-infra.sh "${{ matrix.environment }}" drift
+
+      - name: Drift check skipped
+        if: >-
+          (matrix.environment == 'low' && secrets.LOW_ENVIRONMENT_TFVARS == '') ||
+          (matrix.environment == 'high' && secrets.HIGH_ENVIRONMENT_TFVARS == '')
+        run: echo "Skipping drift check for ${{ matrix.environment }} environment because required tfvars secret is not configured."
